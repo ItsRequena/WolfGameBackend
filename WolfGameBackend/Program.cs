@@ -1,6 +1,10 @@
+using WolfGameBackend.Controllers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddSignalR();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -10,9 +14,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         builder => builder
-            .WithOrigins("http://localhost:5173")
+            .WithOrigins("http://localhost:5173", "https://itsrequena.github.io/WolfGame")
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            .AllowCredentials());
 });
 
 builder.Services.AddSwaggerGen(c =>
@@ -42,5 +47,7 @@ app.UseCors("AllowReactApp");
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<RoomHubController>("/roomhub");
 
 app.Run();
